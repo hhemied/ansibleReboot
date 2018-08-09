@@ -1,0 +1,23 @@
+---
+- name: Asking for cofirmation
+  pause:
+    prompt: "Are you sure you need to reboot the system ?"
+  register: answer
+  changed_when: true
+
+
+- name: rebooting
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+  become: true
+  ignore_errors: yes
+  when: answer.user_input == "yes" or answer.user_input == 'y'
+
+- name: waiting for the host to back up again
+  wait_for: host={{ ansible_fqdn }}
+            port=22
+            timeout={{ 5 * 60 }}
+            delay=10
+            state=started
+  delegate_to: 127.0.0.1
