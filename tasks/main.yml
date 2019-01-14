@@ -16,8 +16,8 @@
 # host={{ ansible_hostname }} -> should be resolvable 
 - name: waiting for the host to back up again
   wait_for:
-    port=22
-    host={{ ansible_hostname }}
-    delay=10
-    state=started
+    port: 22
+    host: "{{ ansible_hostname }}"
+    delay: 10
+    state: started
   delegate_to: 127.0.0.1
